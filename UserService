@@ -1,0 +1,129 @@
+@Entity
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+}
+@Entity
+public class Book {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String title;
+
+}
+@Entity
+public class Loan {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    private User user;
+
+    @ManyToOne
+    private Book book;
+
+    private Date checkoutDate;
+    private Date dueDate;
+}
+public interface UserService {
+
+    User addUser(User user);
+
+    void deleteUser(Long userId);
+}
+@Service
+public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Override
+    public User addUser(User user) {
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
+    }
+}
+public interface BookService {
+
+    Book addBook(Book book);
+
+    void deleteBook(Long bookId);
+
+}
+@Service
+public class BookServiceImpl implements BookService {
+
+    @Autowired
+    private BookRepository bookRepository;
+
+    @Override
+    public Book addBook(Book book) {
+        return bookRepository.save(book);
+    }
+
+    @Override
+    public void deleteBook(Long bookId) {
+        bookRepository.deleteById(bookId);
+    }
+}
+public interface LoanService {
+
+    Loan borrowBook(Long userId, Long bookId);
+
+    void returnBook(Long loanId);
+}
+@Service
+public class LoanServiceImpl implements LoanService {
+
+    @Autowired
+    private LoanRepository loanRepository;
+
+    @Override
+    public Loan borrowBook(Long userId, Long bookId) {
+    }
+
+    @Override
+    public void returnBook(Long loanId) {
+    }
+
+}
+@RestController
+@RequestMapping("/library")
+public class LibraryController {
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private BookService bookService;
+
+    @Autowired
+    private LoanService loanService;
+}
+@RunWith(SpringRunner.class)
+@DataJpaTest
+public class LibraryServiceTests {
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private BookService bookService;
+
+    @Autowired
+    private LoanService loanService;
+
+}
